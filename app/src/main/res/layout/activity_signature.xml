@@ -6,10 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".SignatureActivity">
 
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
     <utils.PaintView
         android:id="@+id/pwSign"
-        android:background="#ABC"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent" />
 
     <LinearLayout

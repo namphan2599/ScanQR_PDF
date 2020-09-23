@@ -36,7 +36,7 @@ public class PaintView extends View {
         path = new Path();
 
         paint.setAntiAlias(true);
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.WHITE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(10f);
@@ -46,12 +46,9 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawColor(BACKGROUND_COLOR);
+        //canvas.drawColor(BACKGROUND_COLOR);
 
         canvas.drawPath(path, paint);
-
-
-
     }
 
 
