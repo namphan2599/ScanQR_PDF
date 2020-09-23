@@ -1,6 +1,8 @@
 package utils;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,9 +13,11 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.example.scanqr_pdf.R;
+
 public class PaintView extends View {
 
-    private int BACKGROUND_COLOR = Color.BLACK;
+    private int BACKGROUND_COLOR = Color.WHITE; //default background
 
     private Paint paint;
     private Path path;
@@ -21,6 +25,12 @@ public class PaintView extends View {
 
     public PaintView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PaintView, 0, 0);
+
+        if(this.getBackground() != null) {
+            BACKGROUND_COLOR = this.getSolidColor();
+        }
 
         paint = new Paint();
         path = new Path();
@@ -36,6 +46,7 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        canvas.drawColor(BACKGROUND_COLOR);
 
         canvas.drawPath(path, paint);
 
@@ -57,7 +68,6 @@ public class PaintView extends View {
                 path.lineTo(posX, posY);
                 break;
             case MotionEvent.ACTION_UP:
-                clear();
                 break;
 
             default:

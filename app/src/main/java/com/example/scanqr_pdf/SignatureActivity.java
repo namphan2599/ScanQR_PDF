@@ -35,7 +35,7 @@ public class SignatureActivity extends AppCompatActivity {
             }
         });
 
-        setContentView(paintView);
+
 
         //customCanvas.draw(new Canvas().drawColor(Color.WHITE));
     }
