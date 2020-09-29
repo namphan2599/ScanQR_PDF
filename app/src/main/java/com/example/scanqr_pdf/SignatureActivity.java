@@ -9,20 +9,27 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +37,7 @@ import android.widget.ToggleButton;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -43,10 +51,8 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
     private final String VIDEO_PATH_NAME = "/mnt/sdcard/VGA_30fps_512vbrate.mp4";
 
     Button btnClear, btnOk;
-    ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PaintView paintView;
-    PreviewView previewView;
-    ExecutorService camereExecutor;
+
 
     private MediaRecorder mMediaRecorder;
     private Camera mCamera;
@@ -57,13 +63,21 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
     private boolean mInitSuccesful;
     int time = 30;
 
-    CountDownTimer countDownTimer = new CountDownTimer(30000, 1000) {
+    CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
 
         public void onTick(long millisUntilFinished) {
             textView.setText(time-- + "");
         }
 
         public void onFinish() {
+
+            Intent intent = new Intent(SignatureActivity.this, PDFViewActivity_test.class);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            Bitmap bitmap = getScreenViewBitmap(paintView);
+            if(bitmap == null) return;
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            intent.putExtra("img", stream.toByteArray());
+            setResult(Activity.RESULT_OK, intent);
             finish();
         }
     };
@@ -157,6 +171,21 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
         // once the objects have been released they can't be reused
         mMediaRecorder = null;
         mCamera = null;
+    }
+
+    public static Bitmap getScreenViewBitmap(final View view) {
+
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+
+        return returnedBitmap;
+
     }
 
 }

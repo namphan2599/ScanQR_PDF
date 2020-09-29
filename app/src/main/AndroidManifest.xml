@@ -9,7 +9,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
     <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.camera.any" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -21,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
-
+        <activity android:name=".PdfViewActivity_sdk"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -34,21 +36,24 @@
         </provider>
 
         <activity android:name=".PDFViewActivity_test">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".SignActivity" />
-        <activity android:name=".PDFViewActivity"></activity>
-        <activity android:name=".SignatureActivity"></activity>
+        <activity android:name=".PDFViewActivity" />
+        <activity android:name=".SignatureActivity" />
         <activity android:name=".ScanActivity" />
         <activity android:name=".MainActivity">
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

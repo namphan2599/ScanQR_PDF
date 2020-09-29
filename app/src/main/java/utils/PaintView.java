@@ -3,6 +3,7 @@ package utils;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -36,7 +37,7 @@ public class PaintView extends View {
         path = new Path();
 
         paint.setAntiAlias(true);
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.RED);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(10f);
@@ -80,6 +81,7 @@ public class PaintView extends View {
         path.reset(); // clear all draw
         invalidate();
     }
+
 
 
 }

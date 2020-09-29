@@ -20,4 +20,9 @@
         android:src="@drawable/ic_action_sign"
         android:layout_margin="16dp"/>
 
+    <ImageView
+        android:id="@+id/imwSign"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
 </RelativeLayout>

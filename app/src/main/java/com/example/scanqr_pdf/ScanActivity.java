@@ -55,4 +55,9 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
 
         //mScannerView.resumeCameraPreview(this);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 }

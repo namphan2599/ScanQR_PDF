@@ -1,5 +1,6 @@
 package com.example.scanqr_pdf;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -14,6 +15,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.pdf.PdfDocument;
 import android.graphics.pdf.PdfRenderer;
@@ -48,6 +51,8 @@ public class PDFViewActivity_test extends AppCompatActivity {
 
     private PDFView pdfView;
 
+    private ImageView imwSign;
+
     private static final String[] PERMISSIONS = {android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final String TAG = "PDFViewActivity_test";
     private String pdfUrl;
@@ -74,11 +79,14 @@ public class PDFViewActivity_test extends AppCompatActivity {
 
         fabSign = findViewById(R.id.fabSign);
 
+        imwSign = findViewById(R.id.imwSign);
+
+
         fabSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PDFViewActivity_test.this, SignatureActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -180,7 +188,6 @@ public class PDFViewActivity_test extends AppCompatActivity {
                 Log.e(TAG, "doInBackground() error" + e.getMessage());
                 Log.e(TAG, "doInBackground() error" + e.getStackTrace());
 
-
             }
             FileDownloader.downloadFile(fileUrl, pdfFile);
             Log.v(TAG, "doInBackground() file download completed");
@@ -199,5 +206,17 @@ public class PDFViewActivity_test extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        byte[] byteArray = data.getByteArrayExtra("img");
+        //imwSign.setBackgroundColor(Color.YELLOW);
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        imwSign.setImageBitmap(bmp);
+
+        //Toast.makeText(this, bitmap.toString(), Toast.LENGTH_SHORT).show();
     }
 }
