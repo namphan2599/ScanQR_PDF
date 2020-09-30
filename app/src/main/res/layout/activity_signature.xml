@@ -31,10 +31,11 @@
 
     <utils.PaintView
         android:id="@+id/pwSign"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_height="match_parent" />
+        android:background="@android:color/transparent"
+        android:layout_height="300dp" />
 
 <!--    <LinearLayout-->
 

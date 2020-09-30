@@ -9,6 +9,8 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -30,6 +32,7 @@ import android.widget.ToggleButton;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -43,10 +46,8 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
     private final String VIDEO_PATH_NAME = "/mnt/sdcard/VGA_30fps_512vbrate.mp4";
 
     Button btnClear, btnOk;
-    ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PaintView paintView;
-    PreviewView previewView;
-    ExecutorService camereExecutor;
+
 
     private MediaRecorder mMediaRecorder;
     private Camera mCamera;
@@ -55,15 +56,23 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
     private SurfaceHolder mHolder;
     private View mToggleButton;
     private boolean mInitSuccesful;
-    int time = 30;
+    int time = 3;
 
-    CountDownTimer countDownTimer = new CountDownTimer(30000, 1000) {
+    CountDownTimer countDownTimer = new CountDownTimer(3000, 1000) {
 
         public void onTick(long millisUntilFinished) {
             textView.setText(time-- + "");
         }
 
         public void onFinish() {
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            Bitmap bitmap = viewToImage(paintView);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+            Intent intent = new Intent();
+            intent.putExtra("img", stream.toByteArray());
+            setResult(RESULT_OK, intent);
             finish();
         }
     };
@@ -90,7 +99,6 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
                 }
             }
         });
-
         paintView = findViewById(R.id.pwSign);
 
 
@@ -157,6 +165,19 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
         // once the objects have been released they can't be reused
         mMediaRecorder = null;
         mCamera = null;
+    }
+
+    private Bitmap viewToImage(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+//        Drawable bgDrawable = view.getBackground();
+//        if (bgDrawable != null)
+//            bgDrawable.draw(canvas);
+//        else
+//            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+
+        return returnedBitmap;
     }
 
 }

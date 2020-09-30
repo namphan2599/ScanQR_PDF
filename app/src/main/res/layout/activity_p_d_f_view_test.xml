@@ -9,7 +9,8 @@
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSign"
@@ -19,5 +20,11 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_action_sign"
         android:layout_margin="16dp"/>
+
+    <ImageView
+        android:id="@+id/imw_sign"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@android:color/transparent"/>
 
 </RelativeLayout>
