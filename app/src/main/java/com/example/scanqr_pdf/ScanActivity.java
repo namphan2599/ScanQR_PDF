@@ -51,11 +51,11 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         Log.v("SCAN_RS", rawResult.getBarcodeFormat().toString());
 
         String pdfUrl = rawResult.getText();
-//        Intent intent = new Intent(ScanActivity.this, PDFViewActivity_test.class);
-//
-//        intent.putExtra("url", pdfUrl);
-//
-//        startActivity(intent);
+        Intent intent = new Intent(ScanActivity.this, WebViewActivity.class);
+
+        intent.putExtra("url", pdfUrl);
+
+        startActivity(intent);
 
 //        String pattern = "\\w*(\\.pdf)$";
 //
@@ -69,8 +69,8 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
 //            fileName = m.group();
 //        }
 //
-        Log.d("pdf url", pdfUrl);
-        Toast.makeText(this, pdfUrl, Toast.LENGTH_LONG).show();
+//        Log.d("pdf url", pdfUrl);
+//        Toast.makeText(this, pdfUrl, Toast.LENGTH_LONG).show();
 
         //mScannerView.resumeCameraPreview(this);
     }
