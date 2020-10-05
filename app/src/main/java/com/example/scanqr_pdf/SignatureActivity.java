@@ -2,48 +2,36 @@ package com.example.scanqr_pdf;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.SurfaceTexture;
+
 import android.hardware.Camera;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
+
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.TextureView;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import android.widget.ToggleButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 
 import utils.PaintView;
 
 public class SignatureActivity extends AppCompatActivity implements SurfaceHolder.Callback{
 
 
-    private final String VIDEO_PATH_NAME = "/mnt/sdcard/VGA_30fps_512vbrate.mp4";
+    private final String VIDEO_PATH_NAME = "/mnt/sdcard/VGA_30fps_512vbrate.mp4"; // config file mp4 here
 
     Button btnClear, btnOk;
     PaintView paintView;
@@ -82,21 +70,18 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature);
 
-        mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        mSurfaceView = findViewById(R.id.surfaceView);
         mHolder = mSurfaceView.getHolder();
-        mHolder.addCallback((SurfaceHolder.Callback) this);
+        mHolder.addCallback(this);
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         textView = findViewById(R.id.txtTime);
 
-        mToggleButton = (ToggleButton) findViewById(R.id.toggleRecordingButton);
-        mToggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            // toggle video recording
-            public void onClick(View v) {
-                if (((ToggleButton)v).isChecked()) {
-                    mMediaRecorder.start();
-                    countDownTimer.start();
-                }
+        mToggleButton = findViewById(R.id.toggleRecordingButton);
+        // toggle video recording
+        mToggleButton.setOnClickListener(v -> {
+            if (((ToggleButton)v).isChecked()) {
+                mMediaRecorder.start();
+                countDownTimer.start();
             }
         });
         paintView = findViewById(R.id.pwSign);

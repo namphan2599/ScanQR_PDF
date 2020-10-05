@@ -4,27 +4,21 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.AsyncQueryHandler;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.pdf.PdfDocument;
-import android.graphics.pdf.PdfRenderer;
-import android.net.Uri;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,10 +29,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import utils.CustomAdapter;
 import utils.FileDownloader;
 
 public class PDFViewActivity_test extends AppCompatActivity {
@@ -89,11 +82,12 @@ public class PDFViewActivity_test extends AppCompatActivity {
         });
 
         ActivityCompat.requestPermissions(PDFViewActivity_test.this, PERMISSIONS, 112);
-//
-//        Bundle bundle = getIntent().getExtras();
 
-//        pdfUrl = bundle.getString("url");
-        download();
+        Bundle bundle = getIntent().getExtras();
+
+        pdfUrl = bundle.getString("url");
+
+        download(pdfUrl);
 
     }
 
@@ -113,7 +107,7 @@ public class PDFViewActivity_test extends AppCompatActivity {
         }
     }
 
-    public void download() {
+    public void download(String url) {
         Log.v(TAG, "download() Method invoked ");
 
         if (!hasPermissions(PDFViewActivity_test.this, PERMISSIONS)) {
@@ -128,7 +122,17 @@ public class PDFViewActivity_test extends AppCompatActivity {
 
 
             //new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
-            new DownloadTask().execute("http://maven.apache.org/maven-1.x/maven.pdf", "file.pdf");
+
+            String pattern = "\\w*(\\.pdf)$";
+            Pattern r = Pattern.compile(pattern);
+            Matcher m = r.matcher(pdfUrl.trim());
+            String fileName = "";
+
+            while (m.find()) {
+                fileName = m.group();
+            }
+
+            new DownloadTask().execute(url, fileName);
 
         }
 
@@ -137,7 +141,7 @@ public class PDFViewActivity_test extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void view() throws IOException {
+    public void view(String fileName) throws IOException {
         Log.v(TAG, "view() Method invoked ");
 
         if (!hasPermissions(PDFViewActivity_test.this, PERMISSIONS)) {
@@ -148,8 +152,8 @@ public class PDFViewActivity_test extends AppCompatActivity {
             t.show();
 
         } else {
-            File d = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File pdfFile = new File(d, "file.pdf");
+            File d = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+            File pdfFile = new File(d, fileName);
 
 
 
@@ -166,6 +170,11 @@ public class PDFViewActivity_test extends AppCompatActivity {
 
 
     private class DownloadTask extends AsyncTask<String, Void, Void> {
+
+        String fileUrl;
+        String fileName;
+
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -179,11 +188,13 @@ public class PDFViewActivity_test extends AppCompatActivity {
         protected Void doInBackground(String... strings) {
             Log.v(TAG, "doInBackground() Method invoked ");
 
-            String fileUrl = strings[0];   // -> url
-            String fileName = strings[1];  // -> file name
+            fileUrl = strings[0];   // -> url
+            fileName = strings[1];  // -> file name
             String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
             Log.v(TAG, extStorageDirectory);
-            File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            //File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+            File folder = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
             File pdfFile = new File(folder, fileName);
 
@@ -216,7 +227,7 @@ public class PDFViewActivity_test extends AppCompatActivity {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
             try {
-                view();
+                view(fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }

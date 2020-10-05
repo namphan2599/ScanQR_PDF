@@ -7,12 +7,16 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -47,11 +51,26 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         Log.v("SCAN_RS", rawResult.getBarcodeFormat().toString());
 
         String pdfUrl = rawResult.getText();
-        Intent intent = new Intent(ScanActivity.this, PDFViewActivity_test.class);
+//        Intent intent = new Intent(ScanActivity.this, PDFViewActivity_test.class);
+//
+//        intent.putExtra("url", pdfUrl);
+//
+//        startActivity(intent);
 
-        intent.putExtra("url", pdfUrl);
-
-        startActivity(intent);
+//        String pattern = "\\w*(\\.pdf)$";
+//
+//        Pattern r = Pattern.compile(pattern);
+//
+//        // Now create matcher object.
+//        Matcher m = r.matcher(pdfUrl.trim());
+//
+//        String fileName = "";
+//        while (m.find()) {
+//            fileName = m.group();
+//        }
+//
+        Log.d("pdf url", pdfUrl);
+        Toast.makeText(this, pdfUrl, Toast.LENGTH_LONG).show();
 
         //mScannerView.resumeCameraPreview(this);
     }
