@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PDFViewActivity_test">
+    tools:context=".PdfViewActivity_sdk">
 
     <com.foxit.sdk.PDFViewCtrl
         android:id="@+id/pdfViewCtrl"
@@ -12,20 +12,20 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="170dp"
         tools:layout_editor_absoluteY="357dp">
+
+
     </com.foxit.sdk.PDFViewCtrl>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabSign"
+        android:id="@+id/signBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_action_sign"
-        android:layout_margin="16dp"/>
 
-    <ImageView
-        android:id="@+id/imwSign"
-        android:layout_width="200dp"
-        android:layout_height="200dp" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#1A8EDC"
+        android:src="@drawable/thumbnail_add_page_selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
