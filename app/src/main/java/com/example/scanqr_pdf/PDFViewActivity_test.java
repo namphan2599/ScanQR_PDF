@@ -199,11 +199,9 @@ public class PDFViewActivity_test extends AppCompatActivity {
     }
 
     public void download() {
-        Log.v(TAG, "download() Method invoked ");
 
         if (!hasPermissions(PDFViewActivity_test.this, PERMISSIONS)) {
 
-            Log.v(TAG, "download() Method DON'T HAVE PERMISSIONS ");
 
             Toast t = Toast.makeText(getApplicationContext(), "You don't have write access !", Toast.LENGTH_LONG);
             t.show();
@@ -244,7 +242,6 @@ public class PDFViewActivity_test extends AppCompatActivity {
 
 
         }
-        Log.v(TAG, "view() Method completed ");
 
     }
 
@@ -262,7 +259,6 @@ public class PDFViewActivity_test extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... strings) {
-            Log.v(TAG, "doInBackground() Method invoked ");
 
             String fileUrl = strings[0];   // -> url
             String fileName = strings[1];  // -> file name
@@ -275,21 +271,15 @@ public class PDFViewActivity_test extends AppCompatActivity {
             if(pdfFile.exists()) {
                 return null;
             }
-            Log.v(TAG, "doInBackground() pdfFile invoked " + pdfFile.getAbsolutePath());
-            Log.v(TAG, "doInBackground() pdfFile invoked " + pdfFile.getAbsoluteFile());
+
 
             try {
                 pdfFile.createNewFile();
-                Log.v(TAG, "doInBackground() file created" + pdfFile);
 
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(TAG, "doInBackground() error" + e.getMessage());
-                Log.e(TAG, "doInBackground() error" + e.getStackTrace());
-
             }
             FileDownloader.downloadFile(fileUrl, pdfFile);
-            Log.v(TAG, "doInBackground() file download completed");
             
             return null;
         }
