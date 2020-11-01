@@ -1,13 +1,8 @@
 package com.example.scanqr_pdf;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,8 +16,10 @@ import android.hardware.Camera;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -35,9 +32,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.common.util.concurrent.ListenableFuture;
+
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -99,8 +97,17 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
             // toggle video recording
             public void onClick(View v) {
                 if (((ToggleButton)v).isChecked()) {
-                    mMediaRecorder.start();
-                    countDownTimer.start();
+
+                    try {
+                        mMediaRecorder.prepare();
+                        mMediaRecorder.start();
+                        countDownTimer.start();
+                    } catch (IllegalStateException | IOException e) {
+                        // This is thrown if the previous calls are not called with the
+                        // proper order
+                        e.printStackTrace();
+                    }
+
                 }
             }
         });
@@ -109,11 +116,13 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
 
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void initRecorder(Surface surface) throws IOException {
         // It is very important to unlock the camera before doing setCamera
         // or it will results in a black preview
         if(mCamera == null) {
-            mCamera = Camera.open();
+
+            mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
             mCamera.unlock();
         }
 
@@ -128,19 +137,25 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
         mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
         mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(640, 480);
-        mMediaRecorder.setOutputFile(VIDEO_PATH_NAME);
 
-        try {
-            mMediaRecorder.prepare();
-        } catch (IllegalStateException e) {
-            // This is thrown if the previous calls are not called with the
-            // proper order
-            e.printStackTrace();
-        }
+
+        //save video
+
+        String fileName = "test.mp4";
+
+        File folder = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
+        File saved = new File(folder, fileName);
+
+
+
+        mMediaRecorder.setOutputFile(saved.getAbsolutePath());
+
+
 
         mInitSuccesful = true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         try {
@@ -185,7 +200,7 @@ public class SignatureActivity extends AppCompatActivity implements SurfaceHolde
         view.draw(canvas);
 
         return returnedBitmap;
-
     }
+
 
 }
