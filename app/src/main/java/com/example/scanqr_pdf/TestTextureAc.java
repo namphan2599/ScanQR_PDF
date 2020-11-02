@@ -32,6 +32,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -39,18 +40,23 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class TestTextureAc extends AppCompatActivity implements TextureView.SurfaceTextureListener {
 
     private android.hardware.Camera mCamera;
     private TextureView mTextureView;
+    private TextView txtDateTime;
 
     //counter
     CountDownTimer countDownTimer = new CountDownTimer(7000, 1000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
+            Date currentDate = Calendar.getInstance().getTime();
 
+            txtDateTime.setText(currentDate.toString());
         }
 
         public void onFinish() {
@@ -103,7 +109,11 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
         mProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
 
+        txtDateTime = findViewById(R.id.txtDateTime);
+        mTextureView = findViewById(R.id.textureView);
+        mTextureView.setSurfaceTextureListener(this);
         mToggleButton = (ToggleButton) findViewById(R.id.toggle);
+
         mToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +127,7 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
                             ActivityCompat.shouldShowRequestPermissionRationale
                                     (TestTextureAc.this, Manifest.permission.RECORD_AUDIO)) {
                         mToggleButton.setChecked(false);
-                        Snackbar.make(findViewById(android.R.id.content), "dunno",
+                        Snackbar.make(findViewById(android.R.id.content), R.string.label_permissions,
                                 Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
                                 new View.OnClickListener() {
                                     @Override
@@ -141,8 +151,9 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
         });
         //end recording screen code here
 
-        mTextureView = findViewById(R.id.textureView);
-        mTextureView.setSurfaceTextureListener(this);
+
+
+        hideBars();
     }
 
 
@@ -206,7 +217,7 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
     public void onToggleScreenShare(View view) {
         if (((ToggleButton) view).isChecked()) {
             mToggleButton.setVisibility(View.INVISIBLE);
-            hideBars();
+            //hideBars();
             initRecorder();
             shareScreen();
             countDownTimer.start();
@@ -244,11 +255,11 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
         try {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setOutputFile(Environment
                     .getExternalStoragePublicDirectory(Environment
                             .DIRECTORY_DOWNLOADS) + "/video.mp4");
-            mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+            mMediaRecorder.setVideoSize(DISPLAY_WIDTH - 100, DISPLAY_HEIGHT);
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
@@ -301,7 +312,7 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
                     onToggleScreenShare(mToggleButton);
                 } else {
                     mToggleButton.setChecked(false);
-                    Snackbar.make(findViewById(android.R.id.content), "dunno",
+                    Snackbar.make(findViewById(android.R.id.content), R.string.label_permissions,
                             Snackbar.LENGTH_INDEFINITE).setAction("ENABLE",
                             new View.OnClickListener() {
                                 @Override

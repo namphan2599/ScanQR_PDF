@@ -25,14 +25,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
-        <activity android:name=".TestTextureAc">
-             <intent-filter>
-                 <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".TestTextureAc"
+            android:screenOrientation="landscape"
+            >
+<!--             <intent-filter>-->
+<!--                 <action android:name="android.intent.action.MAIN" />-->
 
-                 <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+<!--                 <category android:name="android.intent.category.LAUNCHER" />-->
+<!--             </intent-filter>-->
         </activity>
-        <activity android:name=".PdfViewActivity_sdk" />
+        <activity android:name=".PdfViewActivity_sdk" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

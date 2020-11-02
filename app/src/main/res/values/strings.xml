@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ScanQR_PDF</string>
+    <string name="label_permissions">Please enable Microphone and Storage permissions.</string>sss
 </resources>
