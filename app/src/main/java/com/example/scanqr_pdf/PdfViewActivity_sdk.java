@@ -2,7 +2,9 @@ package com.example.scanqr_pdf;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -12,14 +14,19 @@ import com.foxit.sdk.PDFException;
 import com.foxit.sdk.PDFViewCtrl;
 import com.foxit.sdk.common.Constants;
 import com.foxit.sdk.common.Library;
+import com.foxit.sdk.common.fxcrt.RectF;
 import com.foxit.sdk.pdf.PDFDoc;
 import com.foxit.sdk.pdf.PDFPage;
 import com.foxit.sdk.pdf.annots.Annot;
+import com.foxit.sdk.pdf.annots.FileAttachment;
+import com.foxit.sdk.pdf.annots.Note;
 import com.foxit.sdk.pdf.interform.Control;
+import com.foxit.sdk.pdf.interform.Field;
 import com.foxit.sdk.pdf.interform.Form;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.time.LocalDate;
 
 public class PdfViewActivity_sdk extends AppCompatActivity {
 
@@ -27,7 +34,7 @@ public class PdfViewActivity_sdk extends AppCompatActivity {
     private FloatingActionButton signBtn;
 
     private PDFDoc pdfDoc;
-
+    private File pdfFile;
     private String pdfFileName = "noname.pdf";
 
     private String sn = "pFQYQrC0GthbID+pvFdBDLpvQbNNwldQqrinQHs5EN5SINgtZNo76g==";
@@ -54,7 +61,7 @@ public class PdfViewActivity_sdk extends AppCompatActivity {
         signBtn.setBackgroundColor(Color.GRAY);
 
         File folder = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-        File pdfFile = new File(folder, pdfFileName);
+        pdfFile = new File(folder, pdfFileName);
 
         path = pdfFile.getAbsolutePath();
 
@@ -161,6 +168,39 @@ public class PdfViewActivity_sdk extends AppCompatActivity {
 
             for(int i = 0; i < annotCount; ++i) {
                 Annot annot = pdfPage.getAnnot(i);
+
+                Log.d("Annot type", annot.getType() + " flag: " + annot.getFlags()+"");
+                if(i==0 ) {
+                    Log.e("error", 1+ "");
+                    RectF rectF = annot.getRect();
+                    rectF.setLeft(annot.getRect().getRight()+20);
+                    rectF.setRight(rectF.getLeft() + 50);
+                    Note note = new Note(pdfPage.addAnnot(Annot.e_Note, rectF));
+                    if (note == null || note.isEmpty()){
+                        Log.e("error",  "note null");
+                        return;
+                    }
+                    note.setIconName("Comment");
+                    // Set color to blue.
+                    note.setBorderColor(0xff0000ff);
+                    note.setContent("This is the note comment, write any content here.");
+
+                    note.resetAppearanceStream();
+
+                    pdfViewCtrl.saveDoc(pdfFile.getPath(), PDFDoc.e_SaveFlagNormal);
+
+
+                    Log.e("Annot Postion",
+                            "Left: " + note.getRect().getLeft() +
+                                    " Right: " + note.getRect().getRight() +
+                                    " Top: " + note.getRect().getTop() +
+                                    " Bottom: " + note.getRect().getBottom()
+                    );
+                }
+
+                Log.e("Annot count", pdfPage.getAnnotCount() + "");
+                Log.e("content", annot.getContent());
+
                 Log.d("Annot Postion",
                         "Left: " + annot.getRect().getLeft() +
                             " Right: " + annot.getRect().getRight() +
@@ -169,17 +209,21 @@ public class PdfViewActivity_sdk extends AppCompatActivity {
                             );
             }
 
-            for(int i = 0; i < controlCount; ++i) {
 
-                Log.d("Control Info", i+"");
+            for(int i = 0; i < form.getFieldCount(""); ++i) {
+
+//                Log.d("Control Info", i+"");
                 Control control = form.getControl(pdfPage, i);
-                Log.d("Control Info", control.getField().getValue());
+
+                Field field = form.getField(i, "");
+                Log.d("Fiel name", field.getName());
+//                Log.d("Control Info", control.);
             }
 
             Log.d("Control count", String.valueOf(controlCount));
 
         } catch (PDFException e) {
-            Log.d("PDFDoc", "Cannot load the pdf file");
+            Log.d("PDFDoc", "error");
             e.printStackTrace();
         }
 

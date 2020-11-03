@@ -50,7 +50,7 @@ public class TestTextureAc extends AppCompatActivity implements TextureView.Surf
     private TextView txtDateTime;
 
     //counter
-    CountDownTimer countDownTimer = new CountDownTimer(7000, 1000) {
+    CountDownTimer countDownTimer = new CountDownTimer(15000, 1000) {
 
         @Override
         public void onTick(long millisUntilFinished) {
